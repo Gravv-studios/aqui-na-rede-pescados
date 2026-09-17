@@ -241,3 +241,24 @@ body{background:#fff}
 @media(max-width:700px){.campaign-hero .origin-grid{grid-template-columns:1fr;gap:25px;padding-top:31px;min-height:0}.campaign-hero .origin-copy h1{font-size:37px;letter-spacing:-1.3px}.campaign-hero .origin-frame{border-radius:40px 12px 38px 14px}.campaign-hero .origin-lead{font-size:14px}.campaign-price strong{font-size:31px}.campaign-hero .origin-visual{padding-top:0}.campaign-note{font-size:9px;padding-top:4px;padding-bottom:20px}.campaign-controls{gap:7px}.campaign-controls select{font-size:11px;padding:10px}}
 .combo-card .product-photo img{width:100%;height:auto;aspect-ratio:3/2;object-fit:contain}
 .product-photo{background:#0c2232}
+
+/* Identidade laranja solicitada: logo, navegação, abertura e catálogo. */
+:root{--coral:#c74708;--coral-hover:#a93805;--cream:#fff7ed;--ink:#392719;--muted:#6d5b4e;--line:#eadccf}
+.topbar{background:#c74708;color:#fff;font-size:12px}.topbar .container{min-height:38px}
+.header{background:#fffaf4;border-bottom-color:#f4ddc7}.header-inner{min-height:98px}
+.brand img{filter:brightness(0) saturate(100%) invert(43%) sepia(95%) saturate(2528%) hue-rotate(354deg) brightness(99%) contrast(94%);width:94px;height:82px}
+.nav{font-size:16px;gap:32px;color:#633414}.nav a{padding:13px 0}.nav a:hover{color:#c74708}
+.order-toggle{background:#ffedd5;border-color:#f5c998;color:#8e350b}.order-toggle b{background:#c74708}
+.origin-hero{background:radial-gradient(ellipse at 100% 70%,#fa7b25 0,transparent 64%),linear-gradient(120deg,#9e3406,#d84d08 65%,#ee6514);color:#fff}
+.origin-eyebrow{color:#ffe0b2}.origin-eyebrow:before{background:#ffe0b2}.origin-copy h1 em{color:#ffe4a6}.origin-lead{color:#fff5e9}.origin-terms{color:#fff2e2;border-color:#ffffff42}
+.origin-button{background:#fff5df;color:#853007;box-shadow:0 8px 24px #72280224;font-size:14px}.origin-button:hover{background:#ffe3ae;color:#682500}.origin-link{color:#fff}
+.campaign-price strong{color:#fff6dc}.campaign-price span,.origin-caption,.campaign-note{color:#fff3e4}
+.campaign-hero .origin-frame{border-color:#ffd3a380;box-shadow:0 15px 40px #71230530}
+.campaign-controls button{border-color:#ffdab2;color:white;background:#ab3d094d}.campaign-controls button:hover{background:#8e2f08}
+.campaign-controls select{background:#9b3509;border-color:#efac76;color:#fff;font-size:13px}
+.section-heading h2,.product-body h3,.order-info h2,.more-products h3{color:#683413}
+.product-price,.row-price{color:#b83b08}.button--navy{background:#c74708;color:#fff}.button--navy:hover{background:#a93805}
+.catalog{background:#fff6ea;border-color:#f2d7ba}.filters{gap:12px}.filters button{font-size:15px;padding:12px 24px;border-color:#e8b98f;color:#843e15;min-height:48px}.filters button[aria-pressed=true]{background:#c74708;border-color:#c74708;color:#fff}.filters button:hover{border-color:#c74708}
+.contact--simple{background:#ffead0;border-top-color:#f2cba1}.contact--simple h2{color:#783a12}.menu-toggle span{background:#a9420e}.cart-dialog .dialog-heading,.subtotal{color:#653217}.js .mobile-order{background:#b94108}.mobile-order b{color:#b94108}.toast{background:#9b3509}
+@media(max-width:1000px){.nav{font-size:15px;gap:22px}.brand img{width:84px;height:73px}}
+@media(max-width:600px){.header-inner{min-height:83px}.brand img{width:77px;height:67px}.topbar .container{min-height:38px;gap:10px}.topbar{font-size:9px}.topbar a{font-size:9px;white-space:nowrap}.topbar span{gap:5px}.topbar svg{width:11px}.nav{font-size:16px}.nav a{padding:13px 0}.filters{gap:8px}.filters button{font-size:14px;padding:10px 15px}.campaign-controls select{font-size:11px}}
