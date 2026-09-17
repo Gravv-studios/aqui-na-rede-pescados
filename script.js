@@ -50,7 +50,7 @@ function updateMessage() {
   if (district) lines.push('', `Meu bairro: ${district}`);
   lines.push('', 'Pode confirmar disponibilidade, pesos, composição dos combos, valor final e condições de entrega?');
   const link = document.querySelector('#send-order');
-  if (cart.length) link.href = 'https://wa.me/5561991669749?text=' + encodeURIComponent(lines.join('\n'));
+  if (cart.length) link.href = 'https://wa.me/5561991498683?text=' + encodeURIComponent(lines.join('\n'));
   else link.removeAttribute('href');
 }
 function renderCart() {
