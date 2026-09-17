@@ -151,11 +151,11 @@ document.addEventListener('click', event => {
     document.querySelector('#media-title').textContent = p.name;
     const content = document.querySelector('#media-content');
     const element = document.createElement(video ? 'video' : 'img');
-    element.src = video ? `assets/videos/${p.id}.mp4` : `assets/produtos/${p.id}-studio-900.webp`;
+    element.src = video ? `assets/videos/${p.id}.mp4` : `assets/produtos/${p.id}-ice-900.webp`;
     if (video) { element.controls=true; element.playsInline=true; element.muted=true; element.preload='metadata'; element.poster=`assets/produtos/${p.id}-480.webp`; element.setAttribute('aria-label',`Vídeo real de ${p.name}`); }
     else element.alt = `Imagem ambientada de ${p.name}`;
     mediaDialog.dataset.product = p.id;
-    document.querySelector(".media-options").hidden = video;
+    document.querySelector(".media-options").hidden = video || !p.originalPhoto;
     document.querySelectorAll("[data-image-version]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.imageVersion === "studio")));
     content.replaceChildren(element); openDialog(mediaDialog);
     if (video) element.play().catch(() => { /* Native controls remain available. */ });
@@ -172,20 +172,24 @@ document.querySelectorAll('[data-image-version]').forEach(button => button.addEv
   const image = document.querySelector('#media-content img');
   if (!p || !image) return;
   const studio = button.dataset.imageVersion === 'studio';
-  image.src = 'assets/produtos/' + p.id + (studio ? '-studio-900.webp' : '-900.webp');
+  image.src = 'assets/produtos/' + p.id + (studio ? '-ice-900.webp' : '-900.webp');
   image.alt = (studio ? 'Imagem ambientada de ' : 'Foto original de ') + p.name;
   document.querySelectorAll('[data-image-version]').forEach(other => other.setAttribute('aria-pressed', String(other === button)));
 }));
 
-// Compara a foto real e as propostas sem alterar o produto nem o pedido.
-const comboLooks = {
- original: {src:'assets/produtos/combo-tilapia-mais-camarao-900.webp',alt:'Foto original do combo de tilápia com camarão na travessa',caption:'Foto real do produto. Compare também as duas propostas ambientadas.'},
- ardosia: {src:'assets/produtos/combo-ardosia.webp',alt:'Proposta ambientada de tilápia e camarão sobre pedra escura',caption:'Proposta 1 · Imagem ambientada com IA a partir da foto real. Composição e pesos sob consulta.'},
- travessa: {src:'assets/produtos/combo-travessa.webp',alt:'Proposta ambientada do combo na travessa horizontal sobre fundo azul',caption:'Proposta 2 · Imagem ambientada com IA a partir da foto real. Composição e pesos sob consulta.'}
-};
-document.querySelectorAll('[data-combo-look]').forEach(button=>button.addEventListener('click',()=>{
- const choice=comboLooks[button.dataset.comboLook];const picture=document.getElementById('origin-image');
- picture.src=choice.src;picture.alt=choice.alt;picture.dataset.look=button.dataset.comboLook;
- document.getElementById('origin-caption').textContent=choice.caption;
- document.querySelectorAll('[data-combo-look]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
-}));
+
+// Destaques manuais: o combo mais vendido abre a página; sem troca automática.
+const heroProducts=JSON.parse(document.getElementById('hero-products').textContent);
+const heroSelect=document.getElementById('hero-select');
+let heroIndex=0;
+function showHero(index){
+ heroIndex=(index+heroProducts.length)%heroProducts.length;
+ const p=heroProducts[heroIndex];
+ for(const key of ['label','line','accent','lead','price','unit','cta','terms'])document.getElementById('hero-'+key).textContent=p[key];
+ document.getElementById('hero-order').href=p.href;
+ document.getElementById('hero-details').href='#'+p.id;
+ const img=document.getElementById('origin-image');img.src='assets/produtos/'+p.id+'-ice-900.webp';img.alt=p.title+' — composição de estúdio ilustrativa';
+ heroSelect.value=p.id;document.getElementById('hero-status').textContent='Destaque '+(heroIndex+1)+' de '+heroProducts.length+' · '+p.title;
+}
+heroSelect.addEventListener('change',()=>showHero(heroProducts.findIndex(p=>p.id===heroSelect.value)));
+document.querySelectorAll('[data-hero-step]').forEach(button=>button.addEventListener('click',()=>showHero(heroIndex+Number(button.dataset.heroStep))));
