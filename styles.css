@@ -262,3 +262,18 @@ body{background:#fff}
 .contact--simple{background:#ffead0;border-top-color:#f2cba1}.contact--simple h2{color:#783a12}.menu-toggle span{background:#a9420e}.cart-dialog .dialog-heading,.subtotal{color:#653217}.js .mobile-order{background:#b94108}.mobile-order b{color:#b94108}.toast{background:#9b3509}
 @media(max-width:1000px){.nav{font-size:15px;gap:22px}.brand img{width:84px;height:73px}}
 @media(max-width:600px){.header-inner{min-height:83px}.brand img{width:77px;height:67px}.topbar .container{min-height:38px;gap:10px}.topbar{font-size:9px}.topbar a{font-size:9px;white-space:nowrap}.topbar span{gap:5px}.topbar svg{width:11px}.nav{font-size:16px}.nav a{padding:13px 0}.filters{gap:8px}.filters button{font-size:14px;padding:10px 15px}.campaign-controls select{font-size:11px}}
+
+/* Dados do pedido antes do envio ao atendimento. */
+#checkout-form{margin-top:24px;border-top:1px solid var(--line);padding-top:20px}
+#checkout-form h3{font-size:21px;margin-bottom:8px}#checkout-form>p{font-size:14px;line-height:1.6}
+#checkout-form label{display:block;margin:16px 0 7px;font-weight:600;font-size:14px}
+#checkout-form input,#checkout-form textarea{box-sizing:border-box;width:100%;padding:12px;border:1px solid #d6bfae;border-radius:8px;background:white;color:#392719;font:inherit}
+#checkout-form input:focus,#checkout-form textarea:focus{outline:2px solid #c74708;outline-offset:2px}
+.checkout-payment{padding:16px;background:#fff1df;border-radius:10px;margin:20px 0 12px}.checkout-payment p{font-size:14px;line-height:1.6;margin:8px 0 0}
+#checkout-form .send-note{display:block;line-height:1.5;margin:12px 0}#send-order{width:100%}
+
+/* Carrossel de destaques com navegação lateral. */
+.hero-carousel{touch-action:pan-y;isolation:isolate}.hero-track{display:flex;transition:transform .45s cubic-bezier(.22,.61,.36,1);will-change:transform}.hero-slide{flex:0 0 100%;min-width:0}.hero-slide img{display:block}
+.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border:1px solid #ffffff70;border-radius:50%;background:#fff9ef;color:#873206;font-size:34px;line-height:1;box-shadow:0 4px 18px #0002;cursor:pointer;z-index:2}.hero-arrow--prev{left:12px}.hero-arrow--next{right:12px}.hero-arrow:hover{background:#fff}.hero-arrow:focus-visible,.hero-dots button:focus-visible{outline:3px solid white;outline-offset:3px}
+.hero-dots{display:flex;justify-content:center;flex-wrap:wrap;margin:12px auto 0;gap:0}.hero-dots button{width:26px;height:30px;border:0;background:transparent;cursor:pointer;position:relative}.hero-dots button:after{content:'';display:block;margin:auto;width:6px;height:6px;border-radius:9px;background:#ffffff65;transition:width .2s,background .2s}.hero-dots button[aria-pressed=true]:after{width:20px;background:#fff}
+@media(prefers-reduced-motion:reduce){.hero-track,.hero-dots button:after{transition:none}}

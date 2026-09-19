@@ -38,7 +38,7 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape' && me
 document.addEventListener('click', event => { if (!event.target.closest('.header')) setMenu(false); });
 function updateMessage() {
   const total = cart.reduce((sum,item) => sum + (productById.get(item.id).price || 0) * item.quantity, 0);
-  const lines = ['Olá! Vim pelo site da Aqui na Rede e gostaria de consultar este pedido:', ''];
+  const lines = ['Olá! Montei meu pedido no site da Aqui na Rede:', ''];
   for (const item of cart) {
     const p = productById.get(item.id);
     lines.push(`${item.quantity} × ${p.name} (${p.unit}) — ${p.price === null ? 'valor a confirmar' : money(p.price * item.quantity)}`);
@@ -48,6 +48,11 @@ function updateMessage() {
   if (cart.some(item => item.id === 'file-de-pescada-mais-camarao')) lines.push('Combo filé de pescada: R$ 169 informado para Taguatinga. Confirmar condição para meu bairro.');
   const district = neighborhood.value.trim();
   if (district) lines.push('', `Meu bairro: ${district}`);
+  for (const [id, label] of [['customer-name','Nome'],['customer-address','Endereço'],['customer-extra','Complemento'],['order-notes','Observações']]) {
+    const value = document.getElementById(id).value.trim();
+    if (value) lines.push(`${label}: ${value}`);
+  }
+  lines.push('Pagamento: pendente. Frete e total final a confirmar.');
   lines.push('', 'Pode confirmar disponibilidade, pesos, composição dos combos, valor final e condições de entrega?');
   const link = document.querySelector('#send-order');
   if (cart.length) link.href = 'https://wa.me/5561991498683?text=' + encodeURIComponent(lines.join('\n'));
@@ -104,6 +109,7 @@ neighborhood.addEventListener('input', updateMessage);
 document.addEventListener('click', event => {
   const add = event.target.closest('[data-add]');
   if (add) {
+    event.preventDefault();
     const p = productById.get(add.dataset.add);
     if (!p) return;
     const item = cart.find(item => item.id === p.id);
@@ -180,16 +186,36 @@ document.querySelectorAll('[data-image-version]').forEach(button => button.addEv
 
 // Destaques manuais: o combo mais vendido abre a página; sem troca automática.
 const heroProducts=JSON.parse(document.getElementById('hero-products').textContent);
-const heroSelect=document.getElementById('hero-select');
+const heroCarousel=document.querySelector('.hero-carousel');
 let heroIndex=0;
 function showHero(index){
  heroIndex=(index+heroProducts.length)%heroProducts.length;
  const p=heroProducts[heroIndex];
  for(const key of ['label','line','accent','lead','price','unit','cta','terms'])document.getElementById('hero-'+key).textContent=p[key];
- document.getElementById('hero-order').href=p.href;
+ document.getElementById('hero-order').href='#'+p.id;
+ document.getElementById('hero-order').dataset.add=p.id;
  document.getElementById('hero-details').href='#'+p.id;
- const img=document.getElementById('origin-image');img.src='assets/produtos/'+p.id+'-ice-900.webp';img.alt=p.title+' — composição de estúdio ilustrativa';
- heroSelect.value=p.id;document.getElementById('hero-status').textContent='Destaque '+(heroIndex+1)+' de '+heroProducts.length+' · '+p.title;
+ document.querySelector('.hero-track').style.transform='translateX(-'+(heroIndex*100)+'%)';
+ document.querySelectorAll('.hero-slide').forEach((slide,i)=>slide.setAttribute('aria-hidden',String(i!==heroIndex)));
+ document.querySelectorAll('[data-hero-index]').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===heroIndex)));
+ document.getElementById('hero-status').textContent='Destaque '+(heroIndex+1)+' de '+heroProducts.length+' · '+p.title;
 }
-heroSelect.addEventListener('change',()=>showHero(heroProducts.findIndex(p=>p.id===heroSelect.value)));
+document.querySelectorAll('[data-hero-index]').forEach(button=>button.addEventListener('click',()=>showHero(Number(button.dataset.heroIndex))));
+heroCarousel.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();showHero(heroIndex+(event.key==='ArrowRight'?1:-1));}});
+let swipeStart=null;
+heroCarousel.addEventListener('touchstart',event=>{const t=event.touches[0];swipeStart={x:t.clientX,y:t.clientY};},{passive:true});
+heroCarousel.addEventListener('touchend',event=>{if(!swipeStart)return;const t=event.changedTouches[0],dx=t.clientX-swipeStart.x,dy=t.clientY-swipeStart.y;swipeStart=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)showHero(heroIndex+(dx<0?1:-1));},{passive:true});
+heroCarousel.addEventListener('touchcancel',()=>{swipeStart=null;});
 document.querySelectorAll('[data-hero-step]').forEach(button=>button.addEventListener('click',()=>showHero(heroIndex+Number(button.dataset.heroStep))));
+
+const checkoutForm = document.getElementById('checkout-form');
+checkoutForm.addEventListener('input', updateMessage);
+checkoutForm.addEventListener('submit', event => event.preventDefault());
+document.getElementById('send-order').addEventListener('click', event => {
+  for (const input of checkoutForm.querySelectorAll('input[required]')) {
+    input.setCustomValidity(input.value.trim() ? '' : 'Preencha este campo.');
+  }
+  if (!cart.length || !checkoutForm.reportValidity()) { event.preventDefault(); return; }
+  updateMessage();
+});
+checkoutForm.addEventListener('input', event => event.target.setCustomValidity?.(''));
