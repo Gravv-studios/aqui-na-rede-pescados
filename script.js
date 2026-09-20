@@ -189,6 +189,10 @@ const heroProducts=JSON.parse(document.getElementById('hero-products').textConte
 const heroCarousel=document.querySelector('.hero-carousel');
 let heroIndex=0;
 function showHero(index){
+ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const copy = document.querySelector('.origin-copy');
+  if (copy.animate) { copy.getAnimations().forEach(a=>a.cancel()); copy.animate([{opacity:.2,transform:'translateX(24px)'},{opacity:1,transform:'translateX(0)'}],{duration:650,easing:'ease-out'}); }
+ }
  heroIndex=(index+heroProducts.length)%heroProducts.length;
  const p=heroProducts[heroIndex];
  for(const key of ['label','line','accent','lead','price','unit','cta','terms'])document.getElementById('hero-'+key).textContent=p[key];
@@ -242,3 +246,30 @@ if ('IntersectionObserver' in window) {
 motionPreference.addEventListener('change',()=>{
   if (motionPreference.matches && document.getAnimations) document.getAnimations().forEach(animation=>animation.cancel());
 });
+
+// Visible, pausable product presentation. No timers while off screen.
+const autoplayButton = document.getElementById('hero-autoplay');
+const heroSection = document.querySelector('.campaign-hero');
+let slideshowTimer = null;
+let slideshowPaused = motionPreference.matches;
+let heroVisible = true;
+function scheduleSlideshow() {
+  clearTimeout(slideshowTimer);
+  autoplayButton.textContent = slideshowPaused ? 'Reproduzir apresentação' : 'Pausar apresentação';
+  autoplayButton.setAttribute('aria-pressed', String(slideshowPaused));
+  if (slideshowPaused || motionPreference.matches || document.hidden || !heroVisible || heroSection.matches(':hover') || heroSection.contains(document.activeElement) || cartDialog.open || mediaDialog.open) return;
+  slideshowTimer = setTimeout(()=>{showHero(heroIndex+1);scheduleSlideshow();},4500);
+}
+autoplayButton.addEventListener('click',()=>{slideshowPaused=!slideshowPaused;scheduleSlideshow();});
+heroSection.addEventListener('mouseenter',scheduleSlideshow);
+heroSection.addEventListener('mouseleave',scheduleSlideshow);
+heroSection.addEventListener('focusin',scheduleSlideshow);
+heroSection.addEventListener('focusout',()=>setTimeout(scheduleSlideshow,0));
+heroSection.addEventListener('touchstart',()=>clearTimeout(slideshowTimer),{passive:true});
+heroSection.addEventListener('touchend',scheduleSlideshow,{passive:true});
+document.addEventListener('visibilitychange',scheduleSlideshow);
+cartDialog.addEventListener('close',scheduleSlideshow);
+mediaDialog.addEventListener('close',scheduleSlideshow);
+motionPreference.addEventListener('change',()=>{slideshowPaused=motionPreference.matches;scheduleSlideshow();});
+if ('IntersectionObserver' in window) new IntersectionObserver(entries=>{heroVisible=entries[0].isIntersecting;scheduleSlideshow();},{threshold:.15}).observe(heroSection);
+scheduleSlideshow();
