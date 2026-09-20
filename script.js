@@ -224,8 +224,12 @@ if (campaignHeroIndex >= 0) {
   const selectedImage = document.querySelectorAll('.hero-slide img')[campaignHeroIndex];
   const selectedProduct = productById.get(campaignContext.offer);
   if (selectedProduct?.originalPhoto) {
+    selectedImage.removeAttribute('srcset');
+    selectedImage.removeAttribute('sizes');
     selectedImage.src = `assets/produtos/${selectedProduct.id}-900.webp`;
     selectedImage.alt = `Foto real de ${selectedProduct.name}`;
+    selectedImage.style.objectFit = 'contain';
+    selectedImage.style.background = '#fff7ed';
     selectedImage.loading = 'eager';
     selectedImage.fetchPriority = 'high';
   }
