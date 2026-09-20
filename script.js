@@ -157,7 +157,7 @@ document.addEventListener('click', event => {
     document.querySelector('#media-title').textContent = p.name;
     const content = document.querySelector('#media-content');
     const element = document.createElement(video ? 'video' : 'img');
-    element.src = video ? `assets/videos/${p.id}.mp4` : `assets/produtos/${p.id}-ice-900.webp`;
+    element.src = video ? `assets/videos/${p.id}.mp4` : `assets/produtos/${p.id}-ambiente-v2-900.webp`;
     if (video) { element.controls=true; element.playsInline=true; element.muted=true; element.preload='metadata'; element.poster=`assets/produtos/${p.id}-480.webp`; element.setAttribute('aria-label',`Vídeo real de ${p.name}`); }
     else element.alt = `Imagem ambientada de ${p.name}`;
     mediaDialog.dataset.product = p.id;
@@ -178,7 +178,7 @@ document.querySelectorAll('[data-image-version]').forEach(button => button.addEv
   const image = document.querySelector('#media-content img');
   if (!p || !image) return;
   const studio = button.dataset.imageVersion === 'studio';
-  image.src = 'assets/produtos/' + p.id + (studio ? '-ice-900.webp' : '-900.webp');
+  image.src = 'assets/produtos/' + p.id + (studio ? '-ambiente-v2-900.webp' : '-900.webp');
   image.alt = (studio ? 'Imagem ambientada de ' : 'Foto original de ') + p.name;
   document.querySelectorAll('[data-image-version]').forEach(other => other.setAttribute('aria-pressed', String(other === button)));
 }));
