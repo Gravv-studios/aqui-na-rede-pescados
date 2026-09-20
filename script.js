@@ -75,6 +75,8 @@ function renderCart() {
   const knownTotal = cart.reduce((sum,item) => sum + (productById.get(item.id).price || 0) * item.quantity, 0);
   const hasKnown = cart.some(item => productById.get(item.id).price !== null);
   const quotes = cart.reduce((sum,item) => sum + (productById.get(item.id).price === null ? item.quantity : 0), 0);
+  const mobileSummary = document.querySelector('[data-mobile-summary]');
+  if (mobileSummary) mobileSummary.textContent = !count ? 'Escolha seus produtos' : hasKnown ? money(knownTotal) + (quotes ? ' + consulta' : ' subtotal') : 'A consultar';
   document.querySelector('#cart-subtotal').textContent = hasKnown ? money(knownTotal) : 'A consultar';
   document.querySelector('#cart-quotes').textContent = quotes ? `+ ${quotes} ${quotes === 1 ? 'item com valor a confirmar' : 'itens com valores a confirmar'}.` : '';
   updateMessage();
@@ -257,8 +259,8 @@ function scheduleSlideshow() {
   clearTimeout(slideshowTimer);
   autoplayButton.textContent = slideshowPaused ? 'Reproduzir apresentação' : 'Pausar apresentação';
   autoplayButton.setAttribute('aria-pressed', String(slideshowPaused));
-  if (slideshowPaused || document.hidden || !heroVisible || heroSection.matches(':hover') || heroSection.contains(document.activeElement) || cartDialog.open || mediaDialog.open) return;
-  slideshowTimer = setTimeout(()=>{showHero(heroIndex+1);scheduleSlideshow();},4500);
+  if (slideshowPaused || document.hidden || !heroVisible || (window.matchMedia('(hover: hover)').matches && heroSection.matches(':hover')) || heroSection.contains(document.activeElement) || cartDialog.open || mediaDialog.open) return;
+  slideshowTimer = setTimeout(()=>{if (!cartDialog.open && !mediaDialog.open) showHero(heroIndex+1);scheduleSlideshow();},4500);
 }
 autoplayButton.addEventListener('click',()=>{slideshowPaused=!slideshowPaused;document.documentElement.classList.toggle('motion-opt-in',!slideshowPaused);if(!slideshowPaused)showHero(heroIndex+1);scheduleSlideshow();});
 heroSection.addEventListener('mouseenter',scheduleSlideshow);
