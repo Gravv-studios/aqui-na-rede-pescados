@@ -115,7 +115,7 @@ document.addEventListener('click', event => {
     const item = cart.find(item => item.id === p.id);
     if (item?.quantity === 99) return announce('Limite de 99 unidades por produto no pedido.');
     if (item) item.quantity += 1; else cart.push({id:p.id,quantity:1});
-    renderCart(); announce(`${p.title} adicionado ao pedido.`);
+    renderCart(); animateAddedProduct(add); announce(`${p.title} adicionado ao pedido.`);
   }
   if (event.target.closest('[data-cart-open]')) { renderCart(); openDialog(cartDialog); }
   if (event.target.closest('[data-browse]')) { cartDialog.close(); document.querySelector('#combos').scrollIntoView(); }
@@ -219,3 +219,26 @@ document.getElementById('send-order').addEventListener('click', event => {
   updateMessage();
 });
 checkoutForm.addEventListener('input', event => event.target.setCustomValidity?.(''));
+
+// Motion is progressive enhancement: all content remains visible without it.
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+function animateAddedProduct(button) {
+  if (motionPreference.matches || typeof button.animate !== 'function') return;
+  button.animate([{transform:'scale(1)'},{transform:'scale(.96)'},{transform:'scale(1)'}],{duration:260,easing:'ease-out'});
+  document.querySelectorAll('[data-cart-count]').forEach(counter=>counter.animate([{transform:'scale(1)'},{transform:'scale(1.35)'},{transform:'scale(1)'}],{duration:420,easing:'ease-out'}));
+}
+if ('IntersectionObserver' in window) {
+  const revealObserver = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if (!entry.isIntersecting) return;
+      revealObserver.unobserve(entry.target);
+      if (!motionPreference.matches && typeof entry.target.animate === 'function') {
+        entry.target.animate([{opacity:.25,transform:'translateY(20px)'},{opacity:1,transform:'translateY(0)'}],{duration:550,easing:'cubic-bezier(.2,.7,.3,1)'});
+      }
+    });
+  },{threshold:.08});
+  document.querySelectorAll('.product-card,.section-heading,.order-info-grid').forEach(element=>revealObserver.observe(element));
+}
+motionPreference.addEventListener('change',()=>{
+  if (motionPreference.matches && document.getAnimations) document.getAnimations().forEach(animation=>animation.cancel());
+});

@@ -296,3 +296,18 @@ body{background:#fff}
 
 /* Destaque comercial: produto próximo, preço e ação claros. */
 .campaign-price{display:flex;align-items:baseline;gap:12px;margin-top:26px;padding:14px 20px;border-radius:16px;background:#fff2d8;color:#803007;width:fit-content}.campaign-price strong{font-size:46px;color:#803007;line-height:1.1}.campaign-price span{color:#803007;font-size:15px}.origin-button{font-size:17px;min-height:54px;font-weight:750}.campaign-hero .origin-copy h1{font-size:clamp(34px,3.4vw,50px)}.campaign-hero .origin-frame{box-shadow:0 18px 48px #63200638}.product-price{font-size:32px}.product-body .button{font-weight:750}.origin-buy{margin-top:22px}@media(max-width:700px){.campaign-price strong{font-size:38px}.campaign-price{padding:12px 16px}.campaign-hero .origin-copy h1{font-size:35px}.origin-button{font-size:16px}}
+
+/* Movimento leve, sem bloquear leitura ou compra. */
+@media(prefers-reduced-motion:no-preference){
+ html{scroll-behavior:smooth}
+ .origin-copy{animation:entrance-copy .65s ease-out both}.origin-visual{animation:entrance-photo .8s ease-out both}
+ .button,.origin-button,.hero-arrow,.filters button{transition:transform .2s ease,box-shadow .2s ease,background-color .2s ease}
+ .button:active,.origin-button:active{transform:scale(.97)}
+ .product-card{transition:box-shadow .25s ease,transform .25s ease}
+ .cart-dialog[open],.media-dialog[open]{animation:dialog-enter .25s ease-out}
+ @media(hover:hover){.product-card:hover{transform:translateY(-5px);box-shadow:0 15px 32px #65330c16}.button:hover,.origin-button:hover{transform:translateY(-2px);box-shadow:0 8px 18px #71320722}}
+}
+@keyframes entrance-copy{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes entrance-photo{from{opacity:.3;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes dialog-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.origin-copy,.origin-visual,.product-card,.button,.origin-button,.hero-arrow,.filters button,.cart-dialog,.media-dialog{animation:none!important;transition:none!important}}
