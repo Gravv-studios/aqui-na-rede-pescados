@@ -1,6 +1,11 @@
 'use strict';
 const products = JSON.parse(document.querySelector('#public-products').textContent);
 const productById = new Map(products.map(product => [product.id, product]));
+const campaignTools = window.AquiNaRedeCampaign;
+const campaignContext = campaignTools?.read(window.location.search) || { offer: null, campaign: null };
+document.querySelectorAll('a[href^="https://wa.me/5561991498683"]').forEach(link => {
+  if (campaignTools) link.href = campaignTools.whatsappUrl(link.href, campaignContext);
+});
 const money = value => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const escapeHTML = value => String(value).replace(/[&<>"']/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]));
 const CART_KEY = 'aqui-na-rede-pedido-v1';
@@ -54,6 +59,7 @@ function updateMessage() {
   }
   lines.push('Pagamento: pendente. Frete e total final a confirmar.');
   lines.push('', 'Pode confirmar disponibilidade, pesos, composição dos combos, valor final e condições de entrega?');
+  if (campaignTools) lines.push(...campaignTools.messageLines(campaignContext));
   const link = document.querySelector('#send-order');
   if (cart.length) link.href = 'https://wa.me/5561991498683?text=' + encodeURIComponent(lines.join('\n'));
   else link.removeAttribute('href');
@@ -186,7 +192,7 @@ document.querySelectorAll('[data-image-version]').forEach(button => button.addEv
 }));
 
 
-// Destaques manuais: o combo mais vendido abre a página; sem troca automática.
+// Links de oferta abrem no produto anunciado; visitas diretas mantêm a vitrine padrão.
 const heroProducts=JSON.parse(document.getElementById('hero-products').textContent);
 const heroCarousel=document.querySelector('.hero-carousel');
 let heroIndex=0;
@@ -213,6 +219,18 @@ heroCarousel.addEventListener('touchstart',event=>{const t=event.touches[0];swip
 heroCarousel.addEventListener('touchend',event=>{if(!swipeStart)return;const t=event.changedTouches[0],dx=t.clientX-swipeStart.x,dy=t.clientY-swipeStart.y;swipeStart=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)showHero(heroIndex+(dx<0?1:-1));},{passive:true});
 heroCarousel.addEventListener('touchcancel',()=>{swipeStart=null;});
 document.querySelectorAll('[data-hero-step]').forEach(button=>button.addEventListener('click',()=>showHero(heroIndex+Number(button.dataset.heroStep))));
+const campaignHeroIndex = heroProducts.findIndex(product => product.id === campaignContext.offer);
+if (campaignHeroIndex >= 0) {
+  const selectedImage = document.querySelectorAll('.hero-slide img')[campaignHeroIndex];
+  const selectedProduct = productById.get(campaignContext.offer);
+  if (selectedProduct?.originalPhoto) {
+    selectedImage.src = `assets/produtos/${selectedProduct.id}-900.webp`;
+    selectedImage.alt = `Foto real de ${selectedProduct.name}`;
+    selectedImage.loading = 'eager';
+    selectedImage.fetchPriority = 'high';
+  }
+  showHero(campaignHeroIndex);
+}
 
 const checkoutForm = document.getElementById('checkout-form');
 checkoutForm.addEventListener('input', updateMessage);
@@ -253,7 +271,7 @@ motionPreference.addEventListener('change',()=>{
 const autoplayButton = document.getElementById('hero-autoplay');
 const heroSection = document.querySelector('.campaign-hero');
 let slideshowTimer = null;
-let slideshowPaused = motionPreference.matches;
+let slideshowPaused = motionPreference.matches || campaignHeroIndex >= 0;
 let heroVisible = true;
 function scheduleSlideshow() {
   clearTimeout(slideshowTimer);
@@ -272,6 +290,6 @@ heroSection.addEventListener('touchend',scheduleSlideshow,{passive:true});
 document.addEventListener('visibilitychange',scheduleSlideshow);
 cartDialog.addEventListener('close',scheduleSlideshow);
 mediaDialog.addEventListener('close',scheduleSlideshow);
-motionPreference.addEventListener('change',()=>{slideshowPaused=motionPreference.matches;document.documentElement.classList.remove('motion-opt-in');scheduleSlideshow();});
+motionPreference.addEventListener('change',()=>{slideshowPaused=motionPreference.matches || campaignHeroIndex >= 0;document.documentElement.classList.remove('motion-opt-in');scheduleSlideshow();});
 if ('IntersectionObserver' in window) new IntersectionObserver(entries=>{heroVisible=entries[0].isIntersecting;scheduleSlideshow();},{threshold:.15}).observe(heroSection);
 scheduleSlideshow();
