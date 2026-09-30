@@ -2,6 +2,9 @@
   'use strict';
   const offers = new Set(['combo-tilapia-mais-camarao', 'file-de-pescada-mais-camarao', 'combo-pescada-amarela', 'camarao-ggg', 'camarao-tigre', 'paella', 'robalo', 'tambatinga-moido']);
   const campaigns = Object.freeze({
+    'anr-combos-tilapia': { region: 'Área de entrega a confirmar', offer: 'combo-tilapia-mais-camarao', creatives: ['geral-v1'] },
+    'anr-combos-postas': { region: 'Área de entrega a confirmar', offer: 'combo-pescada-amarela', creatives: ['postas-v1'] },
+    'anr-combos-file': { region: 'Taguatinga', offer: 'file-de-pescada-mais-camarao', creatives: ['file-v1'] },
     'anr-ceilandia-tilapia': { region: 'Ceilândia', offer: 'combo-tilapia-mais-camarao', creatives: ['foto-combo', 'video-real'] },
     'anr-lago-sul-ggg': { region: 'Lago Sul', offer: 'camarao-ggg', creatives: ['foto-produto', 'video-real'] },
     'anr-lago-sul-robalo': { region: 'Lago Sul', offer: 'robalo', creatives: ['foto-produto', 'video-real'] },
