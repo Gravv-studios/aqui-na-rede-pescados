@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/crm", "destination": "https://aqui-na-rede-crm.vercel.app/crm/" },
+    { "source": "/crm/:path*", "destination": "https://aqui-na-rede-crm.vercel.app/crm/:path*" },
+    { "source": "/api/crm/:path*", "destination": "https://aqui-na-rede-crm.vercel.app/api/crm/:path*" },
+    { "source": "/api/whatsapp/:path*", "destination": "https://aqui-na-rede-crm.vercel.app/api/whatsapp/:path*" },
+    { "source": "/webhooks/whatsapp", "destination": "https://aqui-na-rede-crm.vercel.app/webhooks/whatsapp" }
+  ]
+}
